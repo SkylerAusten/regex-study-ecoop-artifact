@@ -17,7 +17,6 @@ from sqlalchemy import (
     Text,
 )
 from sqlalchemy.sql import func
-from sqlalchemy.dialects.mysql import CHAR
 from sqlalchemy.types import TypeDecorator, JSON
 from sqlalchemy.ext.hybrid import hybrid_property
 
@@ -27,11 +26,11 @@ from custom_types import ClassificationLabel, ClassificationType
 db = SQLAlchemy()
 
 
-# Type decorator to store UUIDs as CHAR(36) in MySQL.
+# Type decorator to store UUIDs as strings in the database.
 class UUID(TypeDecorator):
     """TODO: Write Docstring."""
 
-    impl = CHAR
+    impl = String(36)
     cache_ok = True
 
     @property
@@ -39,7 +38,7 @@ class UUID(TypeDecorator):
         return uuid.UUID
 
     def load_dialect_impl(self, dialect):
-        return dialect.type_descriptor(CHAR(36))  # Store as string
+        return dialect.type_descriptor(String(36))
 
     def process_bind_param(self, value, dialect):
         if value is None:
@@ -105,7 +104,7 @@ class User(db.Model):
     walkthrough_time = db.Column(
         DateTime, nullable=True
     )  # Walkthrough completion time.
-    created_at = db.Column(DateTime, server_default=func.sysdate(), nullable=False)
+    created_at = db.Column(DateTime, server_default=func.now(), nullable=False)
     study_order = db.Column(ListJSON(), default=list, nullable=True)
     study_pos = db.Column(Integer, default=0, nullable=True)
     study_complete = db.Column(Boolean, default=False, nullable=False)
@@ -136,7 +135,7 @@ class ToolSession(db.Model):
 
     session_id = db.Column(Integer, primary_key=True, autoincrement=True)
     user_uuid = db.Column(UUID(), ForeignKey("user.user_uuid"), nullable=False)
-    created_at = db.Column(DateTime, server_default=func.sysdate(), nullable=False)
+    created_at = db.Column(DateTime, server_default=func.now(), nullable=False)
     study_problem = db.Column(Integer, nullable=True)
     completed_at = db.Column(DateTime, nullable=True)
 
@@ -174,7 +173,7 @@ class TextDescription(db.Model):
         Integer, ForeignKey("tool_session.session_id"), nullable=False
     )
     submitted_at = db.Column(
-        DateTime, server_default=func.sysdate(), nullable=False, index=True
+        DateTime, server_default=func.now(), nullable=False, index=True
     )
     description = db.Column(Text, default=None, nullable=True)
 
@@ -195,7 +194,7 @@ class CandidateExpression(db.Model):
     session_id = db.Column(
         Integer, ForeignKey("tool_session.session_id"), nullable=False
     )
-    generated_at = db.Column(DateTime, server_default=func.sysdate(), nullable=False)
+    generated_at = db.Column(DateTime, server_default=func.now(), nullable=False)
     regex_str = db.Column(Text, nullable=False)
     confidence = db.Column(Integer, default=0, nullable=False)
 
@@ -238,7 +237,7 @@ class WordClassification(db.Model):
     exp_in_play = db.Column(ListJSON(), nullable=True)
 
     # Submission time.
-    submitted_at = db.Column(DateTime, server_default=func.sysdate(), nullable=False)
+    submitted_at = db.Column(DateTime, server_default=func.now(), nullable=False)
 
     @classmethod
     def latest(cls, session_id, word):
@@ -322,7 +321,7 @@ class WordReflection(db.Model):
     )
     explanation = db.Column(db.Text, nullable=False)
 
-    submitted_at = db.Column(DateTime, server_default=func.sysdate(), nullable=False)
+    submitted_at = db.Column(DateTime, server_default=func.now(), nullable=False)
 
     classification = db.relationship("WordClassification", lazy="joined")
 
