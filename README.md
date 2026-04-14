@@ -9,7 +9,7 @@ A Flask web application for evaluating human performance on regex pattern matchi
 Run the container standalone with an ephemeral SQLite database -- no MySQL required. Data does not persist across restarts.
 
 ```bash
-docker run -p 8080:8080 -e USE_SQLITE=true ghcr.io/skylerausten/regex-study-ecoop-artifact:latest
+docker run -p 8080:8080 ghcr.io/skylerausten/regex-study-ecoop-artifact:latest
 ```
 
 The app will be available at `http://localhost:8080`.
