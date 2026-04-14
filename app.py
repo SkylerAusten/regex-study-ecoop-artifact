@@ -469,7 +469,7 @@ def setup_user():
         error = None
         if request.method == "POST":
             error = "Please enter a Prolific ID."
-        default_pid = "anon12345" if app.config.get("SQLALCHEMY_DATABASE_URI", "").startswith("sqlite") else ""
+        default_pid = "000000000000000000000000" if app.config.get("SQLALCHEMY_DATABASE_URI", "").startswith("sqlite") else ""
         return render_template("enter_pid.html", prolific_id=prolific_id or default_pid, error=error)
 
     # Check if the user already exists.
