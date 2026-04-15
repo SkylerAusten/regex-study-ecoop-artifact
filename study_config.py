@@ -1,3 +1,5 @@
+import os
+
 from regex_node import RegexNode
 
 STUDY_PROBLEMS = [
@@ -52,7 +54,7 @@ STUDY_PROBLEMS = [
 ]
 
 STUDY_VERSION = 3
-SHOW_CANDIDATES = True
+SHOW_CANDIDATES = os.environ.get("SHOW_CANDIDATES", "true").strip().lower() in ("true", "1", "yes")
 SHOW_LABELS = False
 CONFIDENCE_THRESHOLD = 4
 UNSURE_THRESHOLD = 6
