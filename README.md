@@ -37,3 +37,16 @@ This starts both the MySQL database and the application. Data is persisted in a 
    ```
 
    Or configure MySQL via environment variables (`DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT`, `DB_NAME`) or a `.env` file.
+
+## Configuration
+
+| Variable | Default | Description |
+|---|---|---|
+| `SHOW_CANDIDATES` | `true` | Set to `false` to run the "without list" study condition (participants write regexes without seeing candidates). |
+| `USE_SQLITE` | _(unset)_ | Set to `true` to use an in-memory SQLite database instead of MySQL. |
+
+Example — run the without-list condition in Docker:
+
+```bash
+docker run -p 8080:8080 -e SHOW_CANDIDATES=false ghcr.io/skylerausten/regex-study-ecoop-artifact:latest
+```
